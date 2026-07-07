@@ -1,0 +1,12 @@
+[Unit]
+Description=Update LUKS HMAC binding after hardware change
+After=local-fs.target
+ConditionPathExists=/run/luks_hardware_mismatch
+
+[Service]
+Type=oneshot
+ExecStart=/root/luks/update_hmac.sh
+RemainAfterExit=yes
+
+[Install]
+WantedBy=multi-user.target
