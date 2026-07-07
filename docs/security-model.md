@@ -25,6 +25,16 @@ Otherwise, the user is prompted for the LUKS passphrase.
 
 ## Key Protection
 
+The LUKS master key is stored with restricted file permissions and is only used after successful hardware authentication.
+
 ## Threat Model
+
+The framework is designed to protect against:
+
+- Storage device theft
+- Hardware replacement
+- Unauthorized automatic unlocking
+
+It is not intended to protect against a fully compromised operating system or privileged attackers.
 
 ## Limitations
