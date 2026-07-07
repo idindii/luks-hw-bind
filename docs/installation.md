@@ -60,3 +60,10 @@ After the installation is complete, verify that the following files exist:
 You can also verify that the initramfs image has been rebuilt successfully.
 
 ## Uninstallation
+
+To remove the framework:
+
+- Delete the `/root/luks` directory.
+- Remove the initramfs hook.
+- Restore the original `/etc/crypttab` configuration.
+- Rebuild the initramfs image.
