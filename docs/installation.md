@@ -50,4 +50,13 @@ The installation script performs the following tasks:
 
 ## Verification
 
+After the installation is complete, verify that the following files exist:
+
+- `/root/luks/hmac_check`
+- `/root/luks/hmac_getkey.sh`
+- `/root/luks/master.key`
+- `/root/luks/expected_hmac`
+
+You can also verify that the initramfs image has been rebuilt successfully.
+
 ## Uninstallation
