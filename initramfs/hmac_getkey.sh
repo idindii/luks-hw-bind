@@ -8,7 +8,6 @@
 # returning the LUKS master key.
 #
 
-# Paths
 HMAC_BIN="/root/luks/hmac_check"
 EXPECTED_FILE="/root/luks/expected_hmac"
 MASTER_KEY="/root/luks/master.key"
@@ -30,12 +29,20 @@ if [ -z "$CURRENT" ]; then
 fi
 
 # Read the expected HMAC
-EXPECTED="$(cat "$EXPECTED_FILE")"
+EXPECTED="$(<"$EXPECTED_FILE")"
+
+if [ -z "$EXPECTED" ]; then
+    echo "Stored hardware HMAC is missing or invalid." >&2
+    /lib/cryptsetup/askpass "Enter LUKS passphrase: "
+    exit 0
+fi
 
 # Authenticate hardware
 if [ "$CURRENT" = "$EXPECTED" ]; then
     cat "$MASTER_KEY"
-else
-    touch "$FLAG"
-    /lib/cryptsetup/askpass "Hardware authentication failed. Enter LUKS passphrase: "
+    exit 0
 fi
+
+touch "$FLAG"
+/lib/cryptsetup/askpass "Hardware authentication failed. Enter LUKS passphrase: "
+exit 0

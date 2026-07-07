@@ -1,15 +1,19 @@
 #!/usr/bin/env bash
 
-#
-# update_hmac.sh
-#
-# Update the stored hardware HMAC and rebuild initramfs.
-#
 set -euo pipefail
 
+LUKS_DIR="/root/luks"
 FLAG="/run/luks_hardware_mismatch"
-EXPECTED_FILE="/root/luks/expected_hmac"
-HMAC_BIN="/root/luks/hmac_check"
+EXPECTED_FILE="$LUKS_DIR/expected_hmac"
+HMAC_BIN="$LUKS_DIR/hmac_check"
+
+check_root()
+{
+    if [ "$EUID" -ne 0 ]; then
+        echo "Please run as root."
+        exit 1
+    fi
+}
 
 check_update_required()
 {
@@ -25,6 +29,9 @@ check_dependencies()
         echo "Missing hmac_check binary."
         exit 1
     }
+
+    mkdir -p "$LUKS_DIR"
+    chmod 700 "$LUKS_DIR"
 }
 
 update_expected_hmac()
@@ -32,7 +39,6 @@ update_expected_hmac()
     echo "[1] Updating hardware HMAC..."
 
     "$HMAC_BIN" --print-hmac > "$EXPECTED_FILE"
-
     chmod 600 "$EXPECTED_FILE"
 }
 
@@ -59,12 +65,12 @@ reboot_system()
     echo "Rebooting in 5 seconds..."
 
     sleep 5
-
     reboot
 }
 
 main()
 {
+    check_root
     check_update_required
     check_dependencies
     update_expected_hmac
