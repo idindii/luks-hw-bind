@@ -67,3 +67,9 @@ To remove the framework:
 - Remove the initramfs hook.
 - Restore the original `/etc/crypttab` configuration.
 - Rebuild the initramfs image.
+
+## Notes
+
+This project has been developed and tested on Debian-based Linux systems using `initramfs-tools`.
+
+Other Linux distributions may require additional integration work.
