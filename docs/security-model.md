@@ -1,9 +1,3 @@
-## Overview
-
-The LUKS Hardware Binding Framework protects access to an encrypted LUKS device by binding the decryption process to the target hardware.
-
-Instead of relying only on a passphrase, the framework verifies a hardware-derived HMAC before automatically providing the encryption key.
-
 ## Security Model
 
 The framework is based on three security components:
@@ -11,6 +5,12 @@ The framework is based on three security components:
 - Hardware identity
 - HMAC-SHA256 verification
 - Secure storage of the master key
+
+## Overview
+
+The LUKS Hardware Binding Framework protects access to an encrypted LUKS device by binding the decryption process to the target hardware.
+
+Instead of relying only on a passphrase, the framework verifies a hardware-derived HMAC before automatically providing the encryption key.
 
 ## Hardware Authentication
 
