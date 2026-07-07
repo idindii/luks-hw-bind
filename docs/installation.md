@@ -32,6 +32,22 @@ make
 
 ## Installation
 
+Run the installation script as root:
+
+```bash
+sudo ./scripts/install.sh
+```
+
+The installation script performs the following tasks:
+
+- Creates the installation directory
+- Builds the HMAC verification utility
+- Installs the required project files
+- Generates the master key
+- Generates the expected hardware HMAC
+- Configures the LUKS keyscript
+- Rebuilds the initramfs image
+
 ## Verification
 
 ## Uninstallation
