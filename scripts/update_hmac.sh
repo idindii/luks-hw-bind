@@ -52,6 +52,17 @@ cleanup()
     rm -f "$FLAG"
 }
 
+reboot_system()
+{
+    echo
+    echo "Update completed."
+    echo "Rebooting in 5 seconds..."
+
+    sleep 5
+
+    reboot
+}
+
 main()
 {
     check_update_required
@@ -59,6 +70,7 @@ main()
     update_expected_hmac
     rebuild_initramfs
     cleanup
+    reboot_system
 }
 
 main "$@"
