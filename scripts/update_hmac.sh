@@ -36,11 +36,29 @@ update_expected_hmac()
     chmod 600 "$EXPECTED_FILE"
 }
 
+rebuild_initramfs()
+{
+    echo "[2] Rebuilding initramfs..."
+
+    update-initramfs -u -k "$(uname -r)"
+
+    cp /boot/initrd.img-"$(uname -r)" \
+       /boot/initramfs.gz \
+       2>/dev/null || true
+}
+
+cleanup()
+{
+    rm -f "$FLAG"
+}
+
 main()
 {
     check_update_required
     check_dependencies
     update_expected_hmac
+    rebuild_initramfs
+    cleanup
 }
 
 main "$@"
