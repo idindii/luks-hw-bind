@@ -24,7 +24,7 @@ create_install_directory()
 
 build_hmac_utility()
 {
-    echo "[*] Building HMAC utility..."
+    echo "[1] Building HMAC utility..."
 
     make
 
@@ -33,7 +33,7 @@ build_hmac_utility()
 
 install_files()
 {
-    echo "[*] Installing project files..."
+    echo "[2] Installing project files..."
 
     install -m 700 initramfs/hmac_getkey.sh \
         /root/luks/hmac_getkey.sh
@@ -44,7 +44,7 @@ install_files()
 
 generate_master_key()
 {
-    echo "[*] Generating master key..."
+    echo "[3] Generating master key..."
 
     if [ ! -f /root/luks/master.key ]; then
         dd if=/dev/urandom \
@@ -59,12 +59,32 @@ generate_master_key()
 
 generate_expected_hmac()
 {
-    echo "[*] Generating hardware HMAC..."
+    echo "[4] Generating hardware HMAC..."
 
     /root/luks/hmac_check --print-hmac \
         > /root/luks/expected_hmac
 
     chmod 600 /root/luks/expected_hmac
+}
+
+configure_crypttab()
+{
+    echo "[5] Configuring crypttab..."
+
+    cat > /etc/crypttab << EOF
+encrypted_root UUID=$(blkid -s UUID -o value /dev/mmcblk0p2) none luks,keyscript=/root/luks/hmac_getkey.sh
+EOF
+}
+
+rebuild_initramfs()
+{
+    echo "[6] Updating initramfs..."
+
+    update-initramfs -u -k "$(uname -r)"
+
+    cp /boot/initrd.img-"$(uname -r)" \
+       /boot/initramfs.gz \
+       2>/dev/null || true
 }
 
 main()
@@ -75,6 +95,8 @@ main()
     install_files
     generate_master_key
     generate_expected_hmac
+    configure_crypttab
+    rebuild_initramfs
 }
 
 main "$@"
