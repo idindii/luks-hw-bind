@@ -15,20 +15,23 @@ esac
 
 . /usr/share/initramfs-tools/hook-functions
 
-# Create destination directory
-mkdir -p "${DESTDIR}/root/luks"
+LUKS_DIR="/root/luks"
+DEST_LUKS_DIR="${DESTDIR}/root/luks"
 
-# Copy authentication files
-cp /root/luks/master.key "${DESTDIR}/root/luks/master.key"
-cp /root/luks/expected_hmac "${DESTDIR}/root/luks/expected_hmac"
+# Create destination directory
+mkdir -p "$DEST_LUKS_DIR"
+
+# Copy authentication data
+cp "$LUKS_DIR/master.key" "$DEST_LUKS_DIR/master.key"
+cp "$LUKS_DIR/expected_hmac" "$DEST_LUKS_DIR/expected_hmac"
 
 # Copy executables
-copy_exec /root/luks/hmac_check /root/luks/hmac_check
-copy_exec /root/luks/hmac_getkey.sh /root/luks/hmac_getkey.sh
+copy_exec "$LUKS_DIR/hmac_check" /root/luks/hmac_check
+copy_exec "$LUKS_DIR/hmac_getkey.sh" /root/luks/hmac_getkey.sh
 copy_exec /usr/bin/openssl
 
 # Set file permissions
-chmod 600 "${DESTDIR}/root/luks/master.key"
-chmod 600 "${DESTDIR}/root/luks/expected_hmac"
-chmod 700 "${DESTDIR}/root/luks/hmac_check"
-chmod 700 "${DESTDIR}/root/luks/hmac_getkey.sh"
+chmod 600 "$DEST_LUKS_DIR/master.key"
+chmod 600 "$DEST_LUKS_DIR/expected_hmac"
+chmod 700 "$DEST_LUKS_DIR/hmac_check" 2>/dev/null || true
+chmod 700 "$DEST_LUKS_DIR/hmac_getkey.sh" 2>/dev/null || true
