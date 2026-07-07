@@ -1,0 +1,34 @@
+#!/bin/sh
+
+PREREQ=""
+
+prereqs() {
+    echo "$PREREQ"
+}
+
+case "$1" in
+    prereqs)
+        prereqs
+        exit 0
+        ;;
+esac
+
+. /usr/share/initramfs-tools/hook-functions
+
+# Create destination directory
+mkdir -p "${DESTDIR}/root/luks"
+
+# Copy authentication files
+cp /root/luks/master.key "${DESTDIR}/root/luks/master.key"
+cp /root/luks/expected_hmac "${DESTDIR}/root/luks/expected_hmac"
+
+# Copy executables
+copy_exec /root/luks/hmac_check /root/luks/hmac_check
+copy_exec /root/luks/hmac_getkey.sh /root/luks/hmac_getkey.sh
+copy_exec /usr/bin/openssl
+
+# Set file permissions
+chmod 600 "${DESTDIR}/root/luks/master.key"
+chmod 600 "${DESTDIR}/root/luks/expected_hmac"
+chmod 700 "${DESTDIR}/root/luks/hmac_check"
+chmod 700 "${DESTDIR}/root/luks/hmac_getkey.sh"
