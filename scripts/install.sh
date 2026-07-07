@@ -67,9 +67,24 @@ generate_expected_hmac()
     chmod 600 /root/luks/expected_hmac
 }
 
+install_systemd_service()
+{
+    echo "[5] Installing systemd service..."
+
+    install -m 644 systemd/luks-update-hmac.service \
+        /etc/systemd/system/luks-update-hmac.service
+}
+
+enable_systemd_service()
+{
+    echo "[6] Enabling systemd service..."
+    systemctl daemon-reload
+    systemctl enable luks-update-hmac.service
+}
+
 configure_crypttab()
 {
-    echo "[5] Configuring crypttab..."
+    echo "[7] Configuring crypttab..."
 
     cat > /etc/crypttab << EOF
 encrypted_root UUID=$(blkid -s UUID -o value /dev/mmcblk0p2) none luks,keyscript=/root/luks/hmac_getkey.sh
@@ -78,7 +93,7 @@ EOF
 
 rebuild_initramfs()
 {
-    echo "[6] Updating initramfs..."
+    echo "[8] Updating initramfs..."
 
     update-initramfs -u -k "$(uname -r)"
 
@@ -87,13 +102,6 @@ rebuild_initramfs()
        2>/dev/null || true
 }
 
-install_systemd_service()
-{
-    echo "[7] Installing systemd service..."
-
-    install -m 644 systemd/luks-update-hmac.service \
-        /etc/systemd/system/luks-update-hmac.service
-}
 
 main()
 {
@@ -104,6 +112,7 @@ main()
     generate_master_key
     generate_expected_hmac
     install_systemd_service
+    enable_systemd_service
     configure_crypttab
     rebuild_initramfs
 }
