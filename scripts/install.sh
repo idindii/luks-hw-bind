@@ -87,6 +87,14 @@ rebuild_initramfs()
        2>/dev/null || true
 }
 
+install_systemd_service()
+{
+    echo "[7] Installing systemd service..."
+
+    install -m 644 systemd/luks-update-hmac.service \
+        /etc/systemd/system/luks-update-hmac.service
+}
+
 main()
 {
     check_root
@@ -95,6 +103,7 @@ main()
     install_files
     generate_master_key
     generate_expected_hmac
+    install_systemd_service
     configure_crypttab
     rebuild_initramfs
 }
