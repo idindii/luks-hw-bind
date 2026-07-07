@@ -38,3 +38,11 @@ The framework is designed to protect against:
 It is not intended to protect against a fully compromised operating system or privileged attackers.
 
 ## Limitations
+
+The framework assumes that:
+
+- The secret used to generate the HMAC remains confidential.
+- The hardware identifier is stable.
+- The boot environment is trusted.
+
+This project complements existing Linux security mechanisms and does not replace Secure Boot or TPM-based solutions.
