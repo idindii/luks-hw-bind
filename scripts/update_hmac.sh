@@ -27,10 +27,20 @@ check_dependencies()
     }
 }
 
+update_expected_hmac()
+{
+    echo "[1] Updating hardware HMAC..."
+
+    "$HMAC_BIN" --print-hmac > "$EXPECTED_FILE"
+
+    chmod 600 "$EXPECTED_FILE"
+}
+
 main()
 {
     check_update_required
     check_dependencies
+    update_expected_hmac
 }
 
 main "$@"
